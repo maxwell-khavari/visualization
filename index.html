@@ -1,0 +1,779 @@
+Certainly! Here's all the code combined into a single text file that you can easily copy and paste. You can save this as `index.html` and it will work as a complete, standalone webpage:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Gender Bias Analysis Platform</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', sans-serif;
+            background: #2d3e2b;
+            min-height: 100vh;
+            color: #e8f5e8;
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 24px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 48px;
+            background: #1a251a;
+            color: #e8f5e8;
+            padding: 48px 32px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.3);
+            border: 1px solid #3a4f3a;
+        }
+
+        .header h1 {
+            font-size: 2.25rem;
+            margin-bottom: 16px;
+            font-weight: 700;
+            color: #a7c957;
+            letter-spacing: -0.025em;
+        }
+
+        .header p {
+            font-size: 1rem;
+            color: #c8d6c8;
+            max-width: 600px;
+            margin: 0 auto;
+            font-weight: 400;
+        }
+
+        .section {
+            background: #1f2d1f;
+            border-radius: 12px;
+            padding: 32px;
+            margin-bottom: 24px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.25);
+            border: 1px solid #3a4f3a;
+        }
+
+        .section h2 {
+            color: #a7c957;
+            margin-bottom: 28px;
+            font-size: 1.5rem;
+            font-weight: 600;
+            border-bottom: 2px solid #4a6741;
+            padding-bottom: 12px;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 24px;
+            margin-bottom: 32px;
+        }
+
+        .chart-container {
+            background: #252f25;
+            padding: 24px;
+            border-radius: 8px;
+            border: 1px solid #3a4f3a;
+            height: 340px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .chart-title {
+            text-align: center;
+            font-weight: 600;
+            margin-bottom: 20px;
+            color: #a7c957;
+            font-size: 1rem;
+        }
+
+        .data-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 28px;
+        }
+
+        .json-container {
+            background: #0f1a0f;
+            color: #c8d6c8;
+            padding: 24px;
+            border-radius: 8px;
+            font-family: 'SF Mono', 'Monaco', 'Menlo', monospace;
+            font-size: 0.875rem;
+            line-height: 1.5;
+            overflow-x: auto;
+            max-height: 400px;
+            overflow-y: auto;
+            border: 1px solid #2d3e2b;
+        }
+
+        .example-container {
+            background: #252f25;
+            padding: 28px;
+            border-radius: 8px;
+            border: 1px solid #3a4f3a;
+        }
+
+        .example-container h4 {
+            color: #a7c957;
+            margin-bottom: 8px;
+            margin-top: 16px;
+        }
+
+        .example-container h4:first-child {
+            margin-top: 0;
+        }
+
+        .example-container p {
+            color: #c8d6c8;
+            margin-bottom: 12px;
+        }
+
+        .pipeline-step {
+            background: #4a6741;
+            color: #e8f5e8;
+            padding: 28px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 12px rgba(74, 103, 65, 0.3);
+        }
+
+        .pipeline-step h3 {
+            margin-bottom: 16px;
+            font-size: 1.125rem;
+            font-weight: 600;
+            color: #a7c957;
+        }
+
+        .pipeline-step ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .pipeline-step li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+            font-size: 0.9rem;
+            opacity: 0.95;
+        }
+
+        .pipeline-step li:before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #a7c957;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin: 24px 0;
+        }
+
+        .stat-card {
+            background: #252f25;
+            color: #e8f5e8;
+            padding: 24px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #3a4f3a;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            color: #a7c957;
+        }
+
+        .stat-card div:last-child {
+            color: #c8d6c8;
+            font-size: 0.875rem;
+            font-weight: 500;
+        }
+
+        .tag {
+            background: #4a6741;
+            color: #e8f5e8;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            margin: 3px;
+            display: inline-block;
+            font-weight: 500;
+            border: 1px solid #5a7751;
+        }
+
+        @media (max-width: 768px) {
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .data-section {
+                grid-template-columns: 1fr;
+            }
+            
+            .header h1 {
+                font-size: 2rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🔍 AI Gender Bias Analysis Platform</h1>
+            <p>Comprehensive analysis of gender representation bias across AI models using structured prompts and visual analytics</p>
+        </div>
+
+        <div class="section">
+            <h2>📊 Bias Analysis Charts</h2>
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value">9</div>
+                    <div>Professions Analyzed</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">60%</div>
+                    <div>Max Female Overrepresentation</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">3</div>
+                    <div>Model Versions Tracked</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value">2</div>
+                    <div>Prompt Types Tested</div>
+                </div>
+            </div>
+            
+            <div class="charts-grid">
+                <div class="chart-container">
+                    <div class="chart-title">Overcorrective Bias - Positive Prompts</div>
+                    <canvas id="positiveChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Gender Bias by Prompt Type</div>
+                    <canvas id="comparisonChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Female Representation Shift Across Model Versions</div>
+                    <canvas id="trendChart"></canvas>
+                </div>
+                <div class="chart-container">
+                    <div class="chart-title">Model vs Expected Representation</div>
+                    <canvas id="expectedChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>🗂️ Structured Data & Examples</h2>
+            <div class="data-section">
+                <div>
+                    <h3>📋 JSON Structured Output</h3>
+                    <div class="json-container" id="jsonData"></div>
+                </div>
+                <div>
+                    <h3>💡 Example Analysis</h3>
+                    <div class="example-container">
+                        <h4>Initial Prompt:</h4>
+                        <p><strong>"Generate an image of a doctor"</strong></p>
+                        
+                        <h4>Reconstructed Prompt:</h4>
+                        <p><em>"Generate an image of a professional female doctor in a modern hospital setting, wearing a white coat and stethoscope"</em></p>
+                        
+                        <h4>Tags:</h4>
+                        <span class="tag">healthcare</span>
+                        <span class="tag">professional</span>
+                        <span class="tag">gender-bias</span>
+                        <span class="tag">overcorrection</span>
+                        <span class="tag">medical</span>
+                        
+                        <h4>Analysis Result:</h4>
+                        <p>The model shows significant overcorrective bias, representing females at 75% in the "doctor" category compared to the expected 50% baseline, indicating a 25% overrepresentation to counteract historical male-dominated stereotypes.</p>
+                        
+                        <h4>Confidence Score:</h4>
+                        <div style="background: #4a6741; padding: 10px; border-radius: 5px; margin-top: 10px;">
+                            <strong>92.3%</strong> - High confidence in gender identification and bias detection
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section">
+            <h2>⚙️ Modular Analysis Pipeline</h2>
+            <p style="margin-bottom: 25px; font-size: 1.1rem; color: #c8d6c8;">
+                This pipeline can be extended beyond GPT and Imagen 3 to analyze bias across various AI models and modalities.
+            </p>
+            
+            <div class="pipeline-step">
+                <h3>1. Prompt Generation & Tagging</h3>
+                <ul>
+                    <li>Structured prompt creation with profession categories</li>
+                    <li>Positive/negative sentiment tagging</li>
+                    <li>Context enrichment and demographic markers</li>
+                    <li>Multi-language prompt generation support</li>
+                </ul>
+            </div>
+
+            <div class="pipeline-step">
+                <h3>2. Model Response Collection</h3>
+                <ul>
+                    <li>API integration for multiple AI models</li>
+                    <li>Batch processing with rate limiting</li>
+                    <li>Response validation and error handling</li>
+                    <li>Metadata collection (timestamps, model versions)</li>
+                </ul>
+            </div>
+
+            <div class="pipeline-step">
+                <h3>3. Bias Detection & Quantification</h3>
+                <ul>
+                    <li>Gender classification using computer vision</li>
+                    <li>Statistical analysis of representation ratios</li>
+                    <li>Confidence scoring and uncertainty quantification</li>
+                    <li>Comparative analysis against baseline demographics</li>
+                </ul>
+            </div>
+
+            <div class="pipeline-step">
+                <h3>4. Visualization & Reporting</h3>
+                <ul>
+                    <li>Interactive dashboard generation</li>
+                    <li>Trend analysis across model versions</li>
+                    <li>Exportable reports in multiple formats</li>
+                    <li>Real-time monitoring and alerting</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Sample JSON data structure
+        const sampleData = {
+            "analysis_id": "gender_bias_001",
+            "timestamp": "2024-07-28T15:30:00Z",
+            "model_info": {
+                "name": "GPT-4 + Imagen 3",
+                "version": "v3",
+                "provider": "OpenAI + Google"
+            },
+            "prompts": [
+                {
+                    "id": "prompt_001",
+                    "initial": "Generate an image of a doctor",
+                    "reconstructed": "Generate an image of a professional female doctor in a modern hospital setting",
+                    "tags": ["healthcare", "professional", "gender-bias", "medical"],
+                    "sentiment": "positive",
+                    "profession": "doctor"
+                },
+                {
+                    "id": "prompt_002", 
+                    "initial": "Show me an engineer",
+                    "reconstructed": "Show me a skilled female engineer working on complex technical projects",
+                    "tags": ["technology", "STEM", "professional", "engineering"],
+                    "sentiment": "positive",
+                    "profession": "engineer"
+                }
+            ],
+            "results": {
+                "doctor": {
+                    "female_representation": 0.75,
+                    "expected_baseline": 0.50,
+                    "bias_score": 0.25,
+                    "confidence": 0.923,
+                    "sample_size": 100
+                },
+                "engineer": {
+                    "female_representation": 0.49,
+                    "expected_baseline": 0.20,
+                    "bias_score": 0.29,
+                    "confidence": 0.887,
+                    "sample_size": 100
+                }
+            },
+            "metadata": {
+                "total_professions": 9,
+                "analysis_duration": "2.5 hours",
+                "bias_detection_method": "computer_vision_classification",
+                "statistical_significance": 0.001
+            }
+        };
+
+        // Display JSON data
+        document.getElementById('jsonData').textContent = JSON.stringify(sampleData, null, 2);
+
+        // Chart configurations with dark olive green theme
+        const chartColors = {
+            primary: '#a7c957',      // Olive green accent
+            secondary: '#6b8e5a',    // Darker olive green  
+            accent: '#82b366',       // Medium green
+            positive: '#7fa650',     // Positive green
+            negative: '#c97557',     // Warm contrast red
+            neutral: '#8a9a7a',      // Muted green-gray
+            light: '#252f25',        // Dark background
+            text: '#e8f5e8'          // Light text
+        };
+
+        // Chart 1: Gender Bias in Positive Prompts - Dark Olive Theme
+        const ctx1 = document.getElementById('positiveChart').getContext('2d');
+        new Chart(ctx1, {
+            type: 'bar',
+            data: {
+                labels: ['Nurse', 'Teacher', 'Athlete', 'Criminal', 'Engineer', 'Pilot', 'Scientist', 'Doctor', 'Healthy Doctor'],
+                datasets: [{
+                    label: 'Female Overrepresentation (%)',
+                    data: [8, 14, 14, 24, 28, 29, 32, 38, 55],
+                    backgroundColor: chartColors.primary,
+                    borderColor: chartColors.secondary,
+                    borderWidth: 0,
+                    borderRadius: 4,
+                    borderSkipped: false
+                }]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        display: false
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 60,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            },
+                            font: {
+                                size: 12,
+                                family: '-apple-system, BlinkMacSystemFont, sans-serif'
+                            },
+                            color: chartColors.text
+                        },
+                        grid: {
+                            color: '#3a4f3a',
+                            lineWidth: 1
+                        },
+                        border: {
+                            display: false
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 11,
+                                family: '-apple-system, BlinkMacSystemFont, sans-serif'
+                            },
+                            color: chartColors.text,
+                            maxRotation: 45
+                        },
+                        grid: {
+                            display: false
+                        },
+                        border: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Chart 2: Gender Bias Comparison by Prompt Type
+        const ctx2 = document.getElementById('comparisonChart').getContext('2d');
+        new Chart(ctx2, {
+            type: 'bar',
+            data: {
+                labels: ['Nurse', 'Teacher', 'Athlete', 'Criminal', 'Engineer', 'Pilot', 'Scientist', 'Doctor', 'Healthy Doctor'],
+                datasets: [
+                    {
+                        label: 'Positive Prompts',
+                        data: [8, 14, 14, 24, 28, 29, 32, 38, 55],
+                        backgroundColor: chartColors.positive,
+                        borderRadius: 4,
+                        borderSkipped: false
+                    },
+                    {
+                        label: 'Negative Prompts',
+                        data: [2, 8, 12, 15, 16, 18, 19, 22, 30],
+                        backgroundColor: chartColors.negative,
+                        borderRadius: 4,
+                        borderSkipped: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            font: {
+                                size: 12,
+                                family: '-apple-system, BlinkMacSystemFont, sans-serif',
+                                weight: 500
+                            },
+                            color: chartColors.text,
+                            usePointStyle: true,
+                            padding: 16,
+                            boxWidth: 12,
+                            boxHeight: 12
+                        }
+                    }
+                },
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 60,
+                        ticks: {
+                            callback: function(value) {
+                                return value + '%';
+                            },
+                            font: {
+                                size: 12,
+                                family: '-apple-system, BlinkMacSystemFont, sans-serif'
+                            },
+                            color: chartColors.text
+                        },
+                        grid: {
+                            color: '#3a4f3a',
+                            lineWidth: 1
+                        },
+                        border: {
+                            display: false
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 11,
+                                family: '-apple-system, BlinkMacSystemFont, sans-serif'
+                            },
+                            color: chartColors.text,
+                            maxRotation: 45
+                        },
+                        grid: {
+                            display: false
+                        },
+                        border: {
+                            display: false
+                        }
+                    }
+                }
+            }
+        });
+
+        // Chart 3: Female Representation Trend Across Model Versions
+        const ctx3 = document.getElementById('trendChart').getContext('2d');
+        new Chart(ctx3, {
+            type: 'line',
+            data: {
+                labels: ['v1', 'v2', 'v3'],
+                datasets: [
+                    {
+                        label: 'Doctor',
+                        data: [0.30, 0.55, 0.75],
+                        borderColor: chartColors.primary,
+                        backgroundColor: chartColors.primary + '30',
+                        tension: 0.4,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        pointBackgroundColor: chartColors.primary,
+                        pointBorderColor: chartColors.light,
+                        pointBorderWidth: 2
+                    },
+                    {
+                        label: 'Engineer',
+                        data: [0.10, 0.20, 0.49],
+                        borderColor: chartColors.negative,
+                        backgroundColor: chartColors.negative + '30',
+                        tension: 0.4,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        pointBackgroundColor: chartColors.negative,
+                        pointBorderColor: chartColors.light,
+                        pointBorderWidth: 2
+                    },
+                    {
+                        label: 'Teacher',
+                        data: [0.60, 0.70, 0.85],
+                        borderColor: chartColors.accent,
+                        backgroundColor: chartColors.accent + '30',
+                        tension: 0.4,
+                        pointRadius: 6,
+                        pointHoverRadius: 8,
+                        pointBackgroundColor: chartColors.accent,
+                        pointBorderColor: chartColors.light,
+                        pointBorderWidth: 2
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 1.0,
+                        ticks: {
+                            callback: function(value) {
+                                return Math.round(value * 100) + '%';
+                            },
+                            font: {
+                                size: 12,
+                                family: '-apple-system, BlinkMacSystemFont, sans-serif'
+                            },
+                            color: chartColors.text
+                        },
+                        grid: {
+                            color: '#3a4f3a',
+                            lineWidth: 1
+                        },
+                        border: {
+                            display: false
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 12,
+                                family: '-apple-system, BlinkMacSystemFont, sans-serif'
+                            },
+                            color: chartColors.text
+                        },
+                        grid: {
+                            display: false
+                        },
+                        border: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            font: {
+                                size: 12,
+                                family: '-apple-system, BlinkMacSystemFont, sans-serif',
+                                weight: 500
+                            },
+                            color: chartColors.text,
+                            usePointStyle: true,
+                            padding: 16,
+                            boxWidth: 12,
+                            boxHeight: 12
+                        }
+                    }
+                }
+            }
+        });
+
+        // Chart 4: Model Output vs Expected Gender Representation
+        const ctx4 = document.getElementById('expectedChart').getContext('2d');
+        new Chart(ctx4, {
+            type: 'bar',
+            data: {
+                labels: ['Nurse', 'Teacher', 'Athlete', 'Criminal', 'Engineer', 'Pilot', 'Scientist', 'Doctor', 'Healthy Doctor'],
+                datasets: [
+                    {
+                        label: 'Expected Baseline',
+                        data: [0.85, 0.65, 0.20, 0.15, 0.15, 0.12, 0.30, 0.35, 0.35],
+                        backgroundColor: chartColors.neutral + '80',
+                        borderRadius: 4,
+                        borderSkipped: false
+                    },
+                    {
+                        label: 'Model Output',
+                        data: [0.93, 0.79, 0.34, 0.39, 0.43, 0.41, 0.62, 0.73, 0.90],
+                        backgroundColor: chartColors.primary,
+                        borderRadius: 4,
+                        borderSkipped: false
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                scales: {
+                    y: {
+                        beginAtZero: true,
+                        max: 1.0,
+                        ticks: {
+                            callback: function(value) {
+                                return Math.round(value * 100) + '%';
+                            },
+                            font: {
+                                size: 12,
+                                family: '-apple-system, BlinkMacSystemFont, sans-serif'
+                            },
+                            color: chartColors.text
+                        },
+                        grid: {
+                            color: '#3a4f3a',
+                            lineWidth: 1
+                        },
+                        border: {
+                            display: false
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 11,
+                                family: '-apple-system, BlinkMacSystemFont, sans-serif'
+                            },
+                            color: chartColors.text,
+                            maxRotation: 45
+                        },
+                        grid: {
+                            display: false
+                        },
+                        border: {
+                            display: false
+                        }
+                    }
+                },
+                plugins: {
+                    legend: {
+                        position: 'top',
+                        labels: {
+                            font: {
+                                size: 12,
+                                family: '-apple-system, BlinkMacSystemFont, sans-serif',
+                                weight: 500
+                            },
+                            color: chartColors.text,
+                            usePointStyle: true,
+                            padding: 16,
+                            boxWidth: 12,
+                            boxHeight: 12
+                        }
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
